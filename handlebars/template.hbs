@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip</title>
+    <!-- Include Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans relative">
+    <!-- Container -->
+    <div class="relative max-w-4xl mx-auto mt-10 bg-white p-6 shadow-lg rounded-lg overflow-hidden">
+        <!-- Watermark -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+            <img src="https://img.freepik.com/free-vector/butterfly-colorful-logo-template_361591-1587.jpg" alt="Watermark" class="w-96 h-96 object-contain">
+        </div>
+
+        <!-- Header Section -->
+        <div class="text-center border-b-2 border-gray-800 pb-4 relative z-10">
+            <img src="https://via.placeholder.com/80" alt="Company Logo" class="absolute top-0 left-0 w-20 h-20">
+            <h1 class="text-xl font-bold text-gray-800">TL TECHNOLOGIES PRIVATE LIMITED</h1>
+            <p class="text-sm text-gray-600">Vilame 1st Floor, Laham Commercial Complex</p>
+            <p class="text-sm text-gray-600">Near Asset Orchestra, Vetturoad Traffic Point, Pallinada Kerala 695582</p>
+            <p class="text-sm text-gray-600">GSTIN/TAX INFO: GSTIN 32AAHCT9865C1Z6</p>
+        </div>
+
+        <!-- Employee Details -->
+        <div class="mt-6 grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg relative z-10">
+            <div>
+                <p><strong>Employee Name:</strong> {{name}}</p>
+                <p><strong>Employee ID:</strong> {{id}}</p>
+            </div>
+            <div>
+                <p><strong>Department:</strong> {{department}}</p>
+                <p><strong>Designation:</strong> {{designation}}</p>
+            </div>
+        </div>
+
+        <!-- Pay Details -->
+        <div class="mt-4 grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg relative z-10">
+            <div>
+                <p><strong>Pay Period:</strong> {{payPeriod}}</p>
+                <p><strong>Pay Date:</strong> {{payDate}}</p>
+            </div>
+        </div>
+
+        <!-- Earnings -->
+        <div class="mt-6 relative z-10">
+            <h2 class="text-lg font-bold text-gray-800">Earnings</h2>
+            <table class="w-full border-collapse border border-gray-300 mt-2">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border border-gray-300 px-4 py-2 text-left">Description</th>
+                        <th class="border border-gray-300 px-4 py-2 text-right">Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">Basic</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">{{basic}}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">House Rent Allowance</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">{{hra}}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">Dearness Allowance</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">{{dearnessAllowance}}</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">Other Allowances</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">{{otherAllowance}}</td>
+                    </tr>
+                    <tr class="bg-gray-100 font-semibold">
+                        <td class="border border-gray-300 px-4 py-2">Total Earnings</td>
+                        <td class="border border-gray-300 px-4 py-2 text-right">{{totalEarnings}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6 text-sm text-gray-500 relative z-10">
+            <p>Total Net Payable: ₹ {{netPay}}</p>
+            <p>This is a computer-generated payslip. For discrepancies, contact HR.</p>
+        </div>
+    </div>
+</body>
+</html>
