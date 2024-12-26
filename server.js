@@ -1,12 +1,8 @@
 import express from 'express';
-import puppeteer from 'puppeteer';
-import handlebars from 'handlebars';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import 'dotenv/config';
 import { connectDB } from './config/db.js';
 import pdfRoutes from './routes/pdf.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 
 const PORT = process.env.PORT
@@ -14,6 +10,8 @@ const app = express();
 
 app.use(express.json());
 
+
+app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/pdf', pdfRoutes);
 
 
