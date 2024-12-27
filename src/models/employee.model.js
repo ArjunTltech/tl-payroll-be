@@ -38,6 +38,8 @@ export const getAllEmployees = async () => {
                 LEFT JOIN 
                 Designations dg ON e.designation_id = dg.id
                 WHERE  e.deleted_on IS NULL;`);
+
+                // .query(`SELECT * FROM Employees WHERE deleted_on IS NULL`);
         return result.recordset;
     } catch (error) {
         console.error('Error retrieving employees:', error);

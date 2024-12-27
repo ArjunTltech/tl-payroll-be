@@ -1,5 +1,5 @@
 import express from 'express';
-import { addEmployeeValidator, deleteEmployeeValidator, getEmployeeByIdValidator, updateEmployeeValidator } from '../middlewares/validate/employee.validate.js';
+import { addEmployeeValidator, deleteEmployeeValidator, getEmployeeByIdValidator, updateEmployeeValidator } from '../validate/employee.validate.js';
 import { addEmployee, deleteEmployee, getEmployee, listEmployees, updateEmployeeDetails } from '../controllers/employee.controller.js';
 const router = express.Router();
 
