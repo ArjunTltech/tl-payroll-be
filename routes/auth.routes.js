@@ -10,8 +10,10 @@ router.post('/register',validateRegistration, registerUser);
 
 router.post('/login',validateLogin, loginUser);
 
+
 router.get('/profile', verifyAndRefreshToken, getProfile);
 
+// router.post('/logout', authController.logout);
 // router.get('/users/role/:role', getUsersByRole);
 
 export default router;
