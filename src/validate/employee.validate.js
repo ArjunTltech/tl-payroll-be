@@ -1,4 +1,5 @@
 import { body, param } from 'express-validator';
+import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 
 // Validator for adding an employee
 export const addEmployeeValidator = [
@@ -28,7 +29,8 @@ export const addEmployeeValidator = [
 
   body('status')
     .isIn(['Active', 'Inactive']).withMessage('Status must be Active or Inactive')
-    .notEmpty().withMessage('Status is required')
+    .notEmpty().withMessage('Status is required'),
+    handleValidationErrors,
 ];
 
 // Validator for updating an employee
@@ -46,17 +48,20 @@ export const updateEmployeeValidator = [
     .optional().isInt().withMessage('Designation ID must be an integer'),
 
   body('status')
-    .optional().isIn(['Active', 'Inactive']).withMessage('Status must be Active or Inactive')
+    .optional().isIn(['Active', 'Inactive']).withMessage('Status must be Active or Inactive'),
+    handleValidationErrors
 ];
 
 // Validator for getting an employee by ID
 export const getEmployeeByIdValidator = [
   param('id')
-    .isInt().withMessage('Employee ID must be an integer')
+    .isInt().withMessage('Employee ID must be an integer'),
+    handleValidationErrors,
 ];
 
 // Validator for deleting an employee
 export const deleteEmployeeValidator = [
   param('id')
-    .isInt().withMessage('Employee ID must be an integer')
+    .isInt().withMessage('Employee ID must be an integer'),
+    handleValidationErrors,
 ];

@@ -1,14 +1,8 @@
-import { validationResult } from 'express-validator';
+
 import { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, softDeleteEmployee } from '../models/employee.model.js';
 
 export const addEmployee = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({
-      success: false,
-      errors: errors.array(),
-    });
-  }
+  
 
   const { name, employee_id, dob, department_id, designation_id, joining_date, status } = req.body;
 

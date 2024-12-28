@@ -6,13 +6,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/generateAcce
 
 export const registerUser = async (req, res) => {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        errors: errors.array()
-      });
-    }
+   
     const { name, email, password } = req.body;
     try {
         const hashedPassword = await argon2.hash(password);
@@ -31,13 +25,7 @@ export const registerUser = async (req, res) => {
     };
 
 export const loginUser = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        errors: errors.array()
-      });
-    }
+    
     const { email, password } = req.body;
     try {
         const user = await getUserByEmail(email);

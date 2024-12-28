@@ -1,4 +1,5 @@
 import { body } from 'express-validator';
+import { handleValidationErrors } from '../middlewares/handleValidationErrors.js';
 
 export const validateRegistration = [
     body('name')
@@ -13,7 +14,8 @@ export const validateRegistration = [
     body('confirmPassword')
       .notEmpty().withMessage('Confirm Password is required')
       .custom((value, { req }) => value === req.body.password)
-      .withMessage('Password confirmation does not match password')
+      .withMessage('Password confirmation does not match password'),
+      handleValidationErrors,
   ];
 
 export const validateLogin = [
@@ -21,4 +23,5 @@ export const validateLogin = [
       .isEmail().withMessage('Valid email is required'),
     body('password')
       .notEmpty().withMessage('Password is required'),
+      handleValidationErrors,
   ];
