@@ -3,13 +3,14 @@ import 'dotenv/config';
 import { connectDB } from './config/db.js';
 import rootRoutes from './routes/index.js';
 import rateLimit from 'express-rate-limit';
-
+import cors from 'cors';
 
 const PORT = process.env.PORT
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+app.use(cors());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
