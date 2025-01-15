@@ -105,9 +105,9 @@ export const generatePdf = async (req, res) => {
     await browser.close();
 
     // Save for debugging purposes
-    const debugPdfPath = path.join(__dirname, 'debug_payslip.pdf');
-    fs.writeFileSync(debugPdfPath, pdfBuffer);
-    console.log(`Debug PDF saved to: ${debugPdfPath}`);
+    // const debugPdfPath = path.join(__dirname, 'debug_payslip.pdf');
+    // fs.writeFileSync(debugPdfPath, pdfBuffer);
+    // console.log(`Debug PDF saved to: ${debugPdfPath}`);
 
     // Ensure response is sent correctly
     res.set({
