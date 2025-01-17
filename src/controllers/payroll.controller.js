@@ -1,4 +1,4 @@
-import { createPayrollRecord, getAllPayrollRecords, getPayrollDetailsByEmployeeId, updatePayrollRecord, deletePayrollRecord } from '../models/payroll.model.js';
+import { createPayrollRecord, getAllPayrollRecords, getPayrollDetailsByEmployeeId, updatePayrollRecord, deletePayrollRecord, checkPayrollOverlap } from '../models/payroll.model.js';
 
 // Create new payroll record
 export const createPayroll = async (req, res) => {
@@ -20,10 +20,19 @@ export const createPayroll = async (req, res) => {
     } = req.body;
 
     try {
+
+        const existingPayroll = await checkPayrollOverlap(employee_id, pay_period_start, pay_period_end);
+        if (existingPayroll.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Payroll already exists for this employee within the specified period'
+            });
+        }
+
         const result = await createPayrollRecord({
             employee_id,
-            pay_period_start,  // pass the new field
-            pay_period_end,    // pass the new field
+            pay_period_start,  
+            pay_period_end,    
             pay_date,
             salary_mode,
             salary_credit_method,
