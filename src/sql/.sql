@@ -46,21 +46,22 @@ CREATE TABLE BankDetails (
 CREATE TABLE Payroll (
     id INT IDENTITY(1,1) PRIMARY KEY,
     employee_id INT NOT NULL,
-    pay_period NVARCHAR(50) NOT NULL,
-    pay_date DATE NOT NULL,
+    pay_period_start DATE NOT NULL,
+    pay_period_end DATE NOT NULL,
+    pay_date DATE NOT NULL, 
     salary_mode NVARCHAR(50) CHECK (salary_mode IN ('Bank Transfer', 'Cash', 'Check')) NOT NULL,
     salary_credit_method NVARCHAR(50) CHECK (salary_credit_method IN ('GPay', 'UPI', 'Bank Transfer')) NOT NULL,
     working_days INT NOT NULL,
     lop_days INT DEFAULT 0,
-    paid_days AS (working_days - lop_days),
+    paid_days AS (working_days - lop_days), -- Computed column
     basic_salary FLOAT NOT NULL,
     hra FLOAT NOT NULL,
     other_allowances FLOAT DEFAULT 0,
     income_tax FLOAT DEFAULT 0,
     provident_fund FLOAT DEFAULT 0,
-    total_deductions AS (income_tax + provident_fund),
-    gross_earnings AS (basic_salary + hra + other_allowances),
-    net_pay AS (basic_salary + hra + other_allowances - total_deductions),
+    total_deductions AS (income_tax + provident_fund), -- Computed column
+    gross_earnings AS (basic_salary + hra + other_allowances), -- Computed column
+    net_pay AS (basic_salary + hra + other_allowances - (income_tax + provident_fund)), -- Computed column
     approval_status NVARCHAR(50) CHECK (approval_status IN ('Pending', 'Approved', 'Rejected')) DEFAULT 'Pending',
     approved_by INT NULL FOREIGN KEY REFERENCES Users(id),
     approval_date DATETIME NULL,
@@ -70,6 +71,7 @@ CREATE TABLE Payroll (
     deleted_on DATETIME NULL,
     FOREIGN KEY (employee_id) REFERENCES Employees(id) ON DELETE CASCADE
 );
+
 
 -- LEAVE SUMMARY TABLE
 CREATE TABLE LeaveSummary (

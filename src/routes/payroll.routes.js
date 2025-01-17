@@ -1,12 +1,14 @@
 
-// import express from 'express';
+import express from 'express';
+import { createPayroll, deletePayroll, getAllPayrolls, getPayrollByEmployee, updatePayroll } from '../controllers/payroll.controller.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// // router.post('/add', payrollController.generate);
-// // router.get('/view', payrollController.getAll);
-// // router.get('/view/:id', payrollController.getOne);
-// // router.put('/update/:id', payrollController.update);
+router.post('/add',createPayroll );
+router.get('/view', getAllPayrolls);
+router.get('/view/:employeeId', getPayrollByEmployee);
+router.put('/update/:id',updatePayroll);
+router.delete('/delete/:id',deletePayroll)
 
 
-// export default router;
+export default router;
