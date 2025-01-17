@@ -1,12 +1,11 @@
-
-
 import { createPayrollRecord, getAllPayrollRecords, getPayrollDetailsByEmployeeId, updatePayrollRecord, deletePayrollRecord } from '../models/payroll.model.js';
 
 // Create new payroll record
 export const createPayroll = async (req, res) => {
     const {
         employee_id,
-        pay_period,
+        pay_period_start,  // updated field name
+        pay_period_end,    // updated field name
         pay_date,
         salary_mode,
         salary_credit_method,
@@ -23,7 +22,8 @@ export const createPayroll = async (req, res) => {
     try {
         const result = await createPayrollRecord({
             employee_id,
-            pay_period,
+            pay_period_start,  // pass the new field
+            pay_period_end,    // pass the new field
             pay_date,
             salary_mode,
             salary_credit_method,
@@ -65,10 +65,11 @@ export const getAllPayrolls = async (req, res) => {
 
 // Get payroll details by employee id
 export const getPayrollByEmployee = async (req, res) => {
-    const { employee_id } = req.params;
+    const { employeeId } = req.params;
 
     try {
-        const result = await getPayrollDetailsByEmployeeId(employee_id);
+        const result = await getPayrollDetailsByEmployeeId(employeeId);
+        
         if (!result.length) {
             return res.status(404).json({ message: 'Payroll not found for this employee' });
         }
@@ -88,7 +89,8 @@ export const getPayrollByEmployee = async (req, res) => {
 export const updatePayroll = async (req, res) => {
     const { id } = req.params;
     const {
-        pay_period,
+        pay_period_start,  // updated field name
+        pay_period_end,    // updated field name
         pay_date,
         salary_mode,
         salary_credit_method,
@@ -104,7 +106,8 @@ export const updatePayroll = async (req, res) => {
 
     try {
         const result = await updatePayrollRecord(id, {
-            pay_period,
+            pay_period_start,  // pass the new field
+            pay_period_end,    // pass the new field
             pay_date,
             salary_mode,
             salary_credit_method,
@@ -133,7 +136,6 @@ export const updatePayroll = async (req, res) => {
     }
 };
 
-// Delete payroll record
 export const deletePayroll = async (req, res) => {
     const { id } = req.params;
 

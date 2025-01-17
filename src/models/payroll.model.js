@@ -1,12 +1,14 @@
 import { sql, getPool } from "../config/db.js";
 
+// Create Payroll Record
 export const createPayrollRecord = async (payrollData) => {
     try {
         const pool = await getPool();
 
         const {
             employee_id,
-            pay_period,
+            pay_period_start, // updated field name
+            pay_period_end,   // updated field name
             pay_date,
             salary_mode,
             salary_credit_method,
@@ -22,7 +24,8 @@ export const createPayrollRecord = async (payrollData) => {
 
         const result = await pool.request()
             .input('employee_id', sql.Int, employee_id)
-            .input('pay_period', sql.NVarChar, pay_period)
+            .input('pay_period_start', sql.Date, pay_period_start) // use SQL Date
+            .input('pay_period_end', sql.Date, pay_period_end)     // use SQL Date
             .input('pay_date', sql.Date, pay_date)
             .input('salary_mode', sql.NVarChar, salary_mode)
             .input('salary_credit_method', sql.NVarChar, salary_credit_method)
@@ -36,11 +39,11 @@ export const createPayrollRecord = async (payrollData) => {
             .input('created_by', sql.Int, created_by)
             .query(`
                 INSERT INTO Payroll (
-                    employee_id, pay_period, pay_date, salary_mode, salary_credit_method, 
+                    employee_id, pay_period_start, pay_period_end, pay_date, salary_mode, salary_credit_method, 
                     working_days, lop_days, basic_salary, hra, other_allowances, 
                     income_tax, provident_fund, created_by
                 ) VALUES (
-                    @employee_id, @pay_period, @pay_date, @salary_mode, @salary_credit_method, 
+                    @employee_id, @pay_period_start, @pay_period_end, @pay_date, @salary_mode, @salary_credit_method, 
                     @working_days, @lop_days, @basic_salary, @hra, @other_allowances, 
                     @income_tax, @provident_fund, @created_by
                 )
@@ -84,7 +87,8 @@ export const updatePayrollRecord = async (id, payrollData) => {
     try {
         const pool = await getPool();
         const {
-            pay_period,
+            pay_period_start, 
+            pay_period_end,   
             pay_date,
             salary_mode,
             salary_credit_method,
@@ -100,7 +104,8 @@ export const updatePayrollRecord = async (id, payrollData) => {
 
         const result = await pool.request()
             .input('id', sql.Int, id)
-            .input('pay_period', sql.NVarChar, pay_period)
+            .input('pay_period_start', sql.Date, pay_period_start) 
+            .input('pay_period_end', sql.Date, pay_period_end)     
             .input('pay_date', sql.Date, pay_date)
             .input('salary_mode', sql.NVarChar, salary_mode)
             .input('salary_credit_method', sql.NVarChar, salary_credit_method)
@@ -114,7 +119,8 @@ export const updatePayrollRecord = async (id, payrollData) => {
             .input('updated_by', sql.Int, updated_by)
             .query(`
                 UPDATE Payroll SET 
-                    pay_period = @pay_period, 
+                    pay_period_start = @pay_period_start, 
+                    pay_period_end = @pay_period_end, 
                     pay_date = @pay_date, 
                     salary_mode = @salary_mode,
                     salary_credit_method = @salary_credit_method,

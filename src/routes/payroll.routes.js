@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/add',createPayroll );
 router.get('/view', getAllPayrolls);
-router.get('/view/:id', getPayrollByEmployee);
+router.get('/view/:employeeId', getPayrollByEmployee);
 router.put('/update/:id',updatePayroll);
 router.delete('/delete/:id',deletePayroll)
 
