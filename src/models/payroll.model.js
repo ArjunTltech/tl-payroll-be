@@ -175,3 +175,166 @@ export const checkPayrollOverlap = async (employeeId, startDate, endDate) => {
         throw new Error('Error checking payroll overlap');
     }
 };
+
+
+
+
+//payslip
+
+
+
+export const getPayslipData = async (employeeId) => {
+  try {
+    const pool = await getPool();
+    const result = await pool
+      .request()
+      .input('employeeId', sql.Int, employeeId)
+      .query(`
+        SELECT 
+          -- Employee Details
+          e.name,
+          e.employee_id,
+          e.dob,
+          d.name as department,
+          des.name as designation,
+          e.status,
+          e.joining_date,
+          e.tenure,
+          e.last_working_day,
+          
+          -- Bank Details
+          b.bank_name,
+          b.account_number,
+          b.ifsc_code,
+          b.account_type,
+          
+          -- Payroll Details
+          p.pay_period_start,
+          p.pay_period_end,
+          p.pay_date,
+          p.salary_mode,
+          p.salary_credit_method as salary_credit,
+          p.working_days,
+          p.lop_days,
+          p.paid_days,
+          p.basic_salary as basic,
+          p.hra,
+          p.other_allowances,
+          p.income_tax,
+          p.provident_fund,
+          p.total_deductions,
+          p.gross_earnings,
+          p.net_pay,
+          
+          -- Leave Summary
+          ls.annual_leave_entitlement as annual_days,
+          ls.casual_leave_taken as casual_leave
+          
+        FROM Employees e
+        LEFT JOIN Departments d ON e.department_id = d.id
+        LEFT JOIN Designations des ON e.designation_id = des.id
+        LEFT JOIN BankDetails b ON e.id = b.employee_id
+        LEFT JOIN Payroll p ON e.id = p.employee_id
+        LEFT JOIN LeaveSummary ls ON e.id = ls.employee_id
+        WHERE e.id = @employeeId
+        AND e.deleted_on IS NULL
+        AND p.deleted_on IS NULL
+        AND p.approval_status = 'Approved'
+        ORDER BY p.pay_period_end DESC
+        OFFSET 0 ROWS
+        FETCH NEXT 1 ROW ONLY;
+      `);
+
+    if (!result.recordset[0]) {
+      throw new Error('No payslip data found');
+    }
+
+    return formatPayslipData(result.recordset[0]);
+  }
+  catch (error) {
+    console.error('Error getting payslip data:', error);
+    throw new Error('Error getting payslip data');
+  }
+};
+
+
+
+const formatPayslipData = (data) => {
+    // Format dates
+    const formatDate = (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    };
+  
+    // Format currency
+    const formatCurrency = (amount) => {
+      return parseFloat(amount).toLocaleString('en-IN', {
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: 'INR'
+      }).replace('₹', '');
+    };
+  
+    // Number to words conversion for net pay
+    const numberToWords = (amount) => {
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+      }).format(amount).replace('₹', '') + ' Only';
+    };
+  
+    // Calculate pay period string
+    const payPeriod = `${formatDate(data.pay_period_start)} - ${formatDate(data.pay_period_end)}`;
+  
+    return {
+      // Employee Details
+      name: data.name,
+      id: data.employee_id,
+      dob: formatDate(data.dob),
+      department: data.department,
+      designation: data.designation,
+      status: data.status,
+      joiningDate: formatDate(data.joining_date),
+      tenure: `${data.tenure} months`,
+      lastWorkingDay: formatDate(data.last_working_day),
+  
+      // Working Summary
+      workingDays: data.working_days,
+      lopDays: data.lop_days,
+      paidDays: data.paid_days,
+      annualDays: data.annual_days,
+      casualLeave: data.casual_leave,
+  
+      // Pay Period Details
+      payPeriod: payPeriod,
+      payDate: formatDate(data.pay_date),
+      salaryMode: data.salary_mode,
+      salaryCredit: data.salary_credit,
+  
+      // Bank Details
+      bankName: data.bank_name,
+      accountNumber: data.account_number,
+      ifscCode: data.ifsc_code,
+      accountType: data.account_type,
+  
+      // Earnings
+      basic: formatCurrency(data.basic),
+      hra: formatCurrency(data.hra),
+      otherAllowance: formatCurrency(data.other_allowances),
+      grossEarnings: formatCurrency(data.gross_earnings),
+  
+      // Deductions
+      incomeTax: formatCurrency(data.income_tax),
+      providentFund: formatCurrency(data.provident_fund),
+      totalDeductions: formatCurrency(data.total_deductions),
+  
+      // Net Pay
+      netPay: formatCurrency(data.net_pay),
+      netPayWords: numberToWords(data.net_pay)
+    };
+  };

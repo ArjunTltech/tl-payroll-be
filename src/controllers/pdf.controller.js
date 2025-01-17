@@ -3,37 +3,50 @@ import handlebars from 'handlebars';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { getPayslipData } from '../models/payroll.model.js';
+import { log } from 'console';
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const generatePdf = async (req, res) => {
-    let browser = null;
+  let browser = null;
   try {
     // Error logging function
-    const logError = (message, error) => {
-      console.error('------- ERROR DETAILS -------');
-      console.error(`Message: ${message}`);
-      console.error(`Error Name: ${error.name}`);
-      console.error(`Error Message: ${error.message}`);
-      console.error(`Stack Trace: ${error.stack}`);
-      console.error('-----------------------------');
-    };
+    // const logError = (message, error) => {
+    //   console.error('------- ERROR DETAILS -------');
+    //   console.error(`Message: ${message}`);
+    //   console.error(`Error Name: ${error.name}`);
+    //   console.error(`Error Message: ${error.message}`);
+    //   console.error(`Stack Trace: ${error.stack}`);
+    //   console.error('-----------------------------');
+    // };
 
-    const employeeData = {
-      name: 'Ali',
-      id: 'TL-E024',
-      salary: '15,000.00',
-      department: 'Dev',
-      designation: 'Full Stack Developer',
-      payPeriod: 'September 2024 - October 2024',
-      payDate: 'October 5th, 2024',
-      basic: '7,967.00',
-      hra: '1,593.00',
-      allowances: '3,186.00',
-      totalEarnings: '15,931.00',
-    };
+    // const employeeData = {
+    //   name: 'Ali',
+    //   id: 'TL-E024',
+    //   salary: '15,000.00',
+    //   department: 'Dev',
+    //   designation: 'Full Stack Developer',
+    //   payPeriod: 'September 2024 - October 2024',
+    //   payDate: 'October 5th, 2024',
+    //   basic: '7,967.00',
+    //   hra: '1,593.00',
+    //   allowances: '3,186.00',
+    //   totalEarnings: '15,931.00',
+    // };
+
+    const { employeeId } = req.params;
+    console.log(req.params)
+    
+
+    if (!employeeId) {
+      throw new Error('Employee ID is required');
+    }
+
+    // Fetch data from database
+    const employeeData = await getPayslipData(employeeId);
 
     const templatePath = path.join(__dirname, '../handlebars/template.hbs');
     console.log('Template Path:', templatePath);
